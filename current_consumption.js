@@ -12,6 +12,7 @@ const secrets = require('./secrets.js');
 const DB_name = 'current_consumption'
 
 const app = express();
+app.use(cors())
 //const influx = new Influx.InfluxDB('http://localhost:8086/' + DB_name)
 const mqtt_client  = mqtt.connect('mqtt://192.168.1.2', secrets.mqtt);
 
