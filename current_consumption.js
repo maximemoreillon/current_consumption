@@ -13,6 +13,8 @@ const DB_name = 'current_consumption'
 
 const app = express();
 app.use(cors())
+app.use(express.static(path.join(__dirname, 'dist')));
+
 //const influx = new Influx.InfluxDB('http://localhost:8086/' + DB_name)
 const mqtt_client  = mqtt.connect('mqtt://192.168.1.2', secrets.mqtt);
 
