@@ -13,6 +13,12 @@ const DB_name = 'current_consumption'
 
 const app = express();
 app.use(cors())
+app.use(history({
+  // Ignore routes for connect-history-api-fallback
+  rewrites: [
+    { from: '/data', to: '/data'},
+  ]
+}));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 //const influx = new Influx.InfluxDB('http://localhost:8086/' + DB_name)
