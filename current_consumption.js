@@ -17,6 +17,7 @@ app.use(history({
   // Ignore routes for connect-history-api-fallback
   rewrites: [
     { from: '/data', to: '/data'},
+    { from: '/drop', to: '/drop'},
   ]
 }));
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -62,7 +63,7 @@ app.get('/drop', (req, res) => {
       if (!names.includes(DB_name)) {
         influx.createDatabase(DB_name)
         .then(() => {
-          influx.query(`CREATE RETENTION POLICY "renention_policy" ON "${DB_name}" DURATION 1h REPLICATION 1 DEFAULT`)
+          influx.query(`CREATE RETENTION POLICY "renention_policy" ON "${DB_name}" DURATION 72h REPLICATION 1 DEFAULT`)
           .then( result => res.send('OK') )
           .catch( error =>  res.status(500).send(error) );
         })

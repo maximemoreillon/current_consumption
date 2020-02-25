@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: current-consumption-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: current-consumption-deployment
+  template:
+    metadata:
+      labels:
+        app: current-consumption-deployment
+    spec:
+      containers:
+      - name: current-consumption
+        image: moreillon/current-consumption
+        ports:
+        - containerPort: 7667
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: current-consumption-service
+  name: current-consumption-service
+spec:
+  ports:
+  - port: 7667
+    nodePort: 30667
+  selector:
+    app: current-consumption-deployment
+  type: LoadBalancer
