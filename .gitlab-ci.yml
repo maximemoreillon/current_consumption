@@ -4,7 +4,7 @@ stages:
 
 variables:
   DOCKER_IMAGE: moreillon/current-consumption
-  KUBERNETES_DEPLOYMENT: current-consumption-deployment
+  KUBERNETES_DEPLOYMENT: current-consumption
 
 
 containerization:

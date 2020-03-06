@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: current-consumption-deployment
+  name: current-consumption
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: current-consumption-deployment
+      app: current-consumption
   template:
     metadata:
       labels:
-        app: current-consumption-deployment
+        app: current-consumption
     spec:
       containers:
       - name: current-consumption
@@ -22,12 +22,12 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: current-consumption-service
-  name: current-consumption-service
+    run: current-consumption
+  name: current-consumption
 spec:
   ports:
   - port: 7667
     nodePort: 30667
   selector:
-    app: current-consumption-deployment
+    app: current-consumption
   type: LoadBalancer
