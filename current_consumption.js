@@ -23,6 +23,7 @@ app.use(history({
   rewrites: [
     { from: '/data', to: '/data'},
     { from: '/drop', to: '/drop'},
+    { from: '/current_consumption', to: '/current_consumption'},
   ]
 }));
 app.use(express.static(path.join(__dirname, 'dist')));
