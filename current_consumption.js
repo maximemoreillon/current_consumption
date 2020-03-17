@@ -43,8 +43,7 @@ const influx = new Influx.InfluxDB({
 
 
 const PORT = 7667
-
-
+const MQTT_topic = "power/status"
 
 
 app.get('/data', (req, res) => {
@@ -56,6 +55,7 @@ app.get('/data', (req, res) => {
 })
 
 app.get('/drop', (req, res) => {
+  // Should be deleted once done
   influx.dropDatabase(DB_name)
   .then( () => {
     influx.getDatabaseNames()
@@ -80,11 +80,13 @@ app.listen(PORT, () => console.log(`[Express] Current consumption listening on 0
 
 mqtt_client.on('connect', () => {
   console.log("[MQTT] Connected to MQTT broker")
-  mqtt_client.subscribe("power/status");
+  mqtt_client.subscribe(MQTT_topic);
 });
 
 mqtt_client.on('message', (topic, payload) => {
-  console.log("[MQTT] Message arrived on " + topic)
+  console.log(`[MQTT] Message arrived on ${topic}: ${String(payload)}`)
+
+  let payload_json = JSON.parse(payload)
 
   influx.writePoints(
     [
@@ -94,9 +96,9 @@ mqtt_client.on('message', (topic, payload) => {
           unit: "A",
         },
         fields: {
-          phase_1: Number(JSON.parse(payload).phase_1),
-          phase_2: Number(JSON.parse(payload).phase_2),
-          total: Number(JSON.parse(payload).total),
+          phase_1: Number(payload_json.phase_1),
+          phase_2: Number(payload_json.phase_2),
+          total: Number(payload_json.phase_1) + Number(payload_json.phase_2),
         },
         timestamp: new Date(),
       }
@@ -107,4 +109,5 @@ mqtt_client.on('message', (topic, payload) => {
     .catch(error => {
       console.error(`Error saving data to InfluxDB! ${error}`)
     });
+    
 });
