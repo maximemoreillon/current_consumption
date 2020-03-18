@@ -55,7 +55,7 @@ const influx = new Influx.InfluxDB({
 
 const PORT = 7667
 const MQTT_topic = "power/status"
-const LOGGING_PERIOD = 1 * 60 * 1000
+const LOGGING_PERIOD = 2 * 60 * 1000
 
 app.get('/data', (req, res) => {
   influx.query(`
