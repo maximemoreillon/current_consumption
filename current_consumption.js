@@ -7,8 +7,11 @@ const http = require('http');
 const mqtt = require('mqtt');
 const cors = require('cors');
 const socketio = require('socket.io');
+const dotenv = require('dotenv');
 
 const secrets = require('./secrets.js');
+
+dotenv.config();
 
 const DB_name = 'current_consumption'
 const measurement_name = 'current'
@@ -32,8 +35,10 @@ app.use(express.static(path.join(__dirname, 'dist')));
 const http_server = http.Server(app);
 const io = socketio(http_server);
 
+var port = 80
+if(process.env.APP_PORT) port=process.env.APP_PORT
 
-//const influx = new Influx.InfluxDB('http://localhost:8086/' + DB_name)
+// Todo: get URL from env var
 const mqtt_client  = mqtt.connect('mqtt://192.168.1.2', secrets.mqtt);
 
 const influx = new Influx.InfluxDB({
@@ -53,7 +58,6 @@ const influx = new Influx.InfluxDB({
 })
 
 
-const PORT = 7667
 const MQTT_topic = "power/status"
 const LOGGING_PERIOD = 2 * 60 * 1000
 
@@ -92,7 +96,7 @@ app.get('/drop', (req, res) => {
   .catch(error => res.status(500).send(error));
 })
 
-http_server.listen(PORT, () => console.log(`[Express] Current consumption listening on 0.0.0.0:${PORT}`))
+http_server.listen(port, () => console.log(`[Express] Current consumption listening on 0.0.0.0:${port}`))
 
 
 mqtt_client.on('connect', () => {

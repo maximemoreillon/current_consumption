@@ -3,13 +3,21 @@ stages:
   - deploy
 
 variables:
-  DOCKER_IMAGE: 192.168.1.2:5000/current-consumption
-  KUBERNETES_DEPLOYMENT: current-consumption
+  APPLICATION_NAME: current-consumption
+  DOCKER_IMAGE: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
+  CERTIFICATE_DOMAIN: current.maximemoreillon.com
 
 
 containerization:
   stage: containerization
   script:
+    # If docker registry password provided, attempt login
+    - >
+      if [ -z ${CONTAINER_REGISTRY_PASSWORD} ];
+      then echo "CONTAINER_REGISTRY_PASSWORD not set, skipping login";
+      else echo "${CONTAINER_REGISTRY_PASSWORD}" | docker login ${CONTAINER_REGISTRY} --username ${CONTAINER_REGISTRY_USERNAME} --password-stdin;
+      fi
+    # Import secrets
     - cp ${SECRETS} ./secrets.js
     - docker build -t ${DOCKER_IMAGE} .
     - docker push ${DOCKER_IMAGE}
