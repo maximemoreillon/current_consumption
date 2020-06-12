@@ -68,7 +68,7 @@ app.get('/current_consumption', (req, res) => {
   .catch( error => res.status(500).send(`Error getting current consumption from Influx: ${error}`) );
 })
 
-function drop_database(req, res) => {
+function drop_database(req, res) {
   influx.dropDatabase(DB_name)
   .then( () => {
     influx.getDatabaseNames()
@@ -86,7 +86,7 @@ function drop_database(req, res) => {
     .catch(error => res.status(500).send(error));
   })
   .catch(error => res.status(500).send(error));
-})
+}
 
 http_server.listen(port, () => console.log(`[Express] Current consumption listening on 0.0.0.0:${port}`))
 
