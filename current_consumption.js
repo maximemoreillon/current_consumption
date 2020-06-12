@@ -1,7 +1,6 @@
 const Influx = require('influx');
 const path = require('path');
 const express = require('express');
-const history = require('connect-history-api-fallback');
 const bodyParser = require("body-parser");
 const http = require('http');
 const mqtt = require('mqtt');
@@ -21,16 +20,6 @@ var last_logging_time = new Date();
 
 const app = express();
 app.use(cors())
-app.use(history({
-  // Ignore routes for connect-history-api-fallback
-  rewrites: [
-    { from: '/data', to: '/data'},
-    { from: '/drop', to: '/drop'},
-    { from: '/current_consumption', to: '/current_consumption'},
-  ]
-}));
-app.use(express.static(path.join(__dirname, 'dist')));
-
 
 const http_server = http.Server(app);
 const io = socketio(http_server);
@@ -61,6 +50,10 @@ const influx = new Influx.InfluxDB({
 const MQTT_topic = "power/status"
 const LOGGING_PERIOD = 2 * 60 * 1000
 
+app.get('/', (req, res) => {
+  res.send('/Current consumption API, Maxime Moreillon')
+})
+
 app.get('/data', (req, res) => {
   influx.query(`
     select * from ${measurement_name}
@@ -75,8 +68,7 @@ app.get('/current_consumption', (req, res) => {
   .catch( error => res.status(500).send(`Error getting current consumption from Influx: ${error}`) );
 })
 
-app.get('/drop', (req, res) => {
-  // Should be deleted once done
+function drop_database(req, res) => {
   influx.dropDatabase(DB_name)
   .then( () => {
     influx.getDatabaseNames()
