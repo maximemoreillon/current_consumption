@@ -5,7 +5,7 @@ stages:
 variables:
   APPLICATION_NAME: current-consumption
   DOCKER_IMAGE: ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
-  CERTIFICATE_DOMAIN: current.maximemoreillon.com
+  CERTIFICATE_DOMAIN: api.current.home.maximemoreillon.com
 
 
 containerization:
