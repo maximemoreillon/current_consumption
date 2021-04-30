@@ -1,13 +1,13 @@
-const Influx = require('influx');
-const path = require('path');
-const express = require('express');
-const bodyParser = require("body-parser");
-const http = require('http');
-const mqtt = require('mqtt');
-const cors = require('cors');
-const socketio = require('socket.io');
-const dotenv = require('dotenv');
-
+const Influx = require('influx')
+const path = require('path')
+const express = require('express')
+const bodyParser = require("body-parser")
+const http = require('http')
+const mqtt = require('mqtt')
+const cors = require('cors')
+const socketio = require('socket.io')
+const dotenv = require('dotenv')
+const pjson = require('./package.json')
 
 dotenv.config();
 
@@ -53,7 +53,12 @@ const MQTT_topic = "power/status"
 const LOGGING_PERIOD = 2 * 60 * 1000
 
 app.get('/', (req, res) => {
-  res.send('/Current consumption API, Maxime Moreillon')
+  res.send({
+    application_name: `Current consumption monitoring API`,
+    version: pjson.version,
+    influxdb_url: process.env.INFLUXDB_URL || 'undefined',
+    mqtt_url: process.env.MQTT_URL || 'undefined',
+  })
 })
 
 app.get('/data', (req, res) => {
