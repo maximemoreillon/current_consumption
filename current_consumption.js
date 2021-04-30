@@ -8,7 +8,6 @@ const cors = require('cors');
 const socketio = require('socket.io');
 const dotenv = require('dotenv');
 
-const secrets = require('./secrets.js');
 
 dotenv.config();
 
@@ -28,10 +27,13 @@ var port = 80
 if(process.env.APP_PORT) port=process.env.APP_PORT
 
 // Todo: get URL from env var
-const mqtt_client  = mqtt.connect('mqtt://192.168.1.2', secrets.mqtt);
+const mqtt_client  = mqtt.connect(process.env.MQTT_URL,{
+  username: process.env.MQTT_USERNAME,
+  password: process.env.MQTT_PASSWORD
+})
 
 const influx = new Influx.InfluxDB({
-  host: secrets.influx.url,
+  host: process.env.INFLUXDB_URL,
   database: DB_name,
   schema: [
     {
